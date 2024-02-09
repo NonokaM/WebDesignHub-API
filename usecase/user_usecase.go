@@ -12,7 +12,7 @@ import (
 )
 
 type IUserUsecase interface {
-	SignUp(user *model.User) (mode.UserResponse, error)
+	SignUp(user model.User) (model.UserResponse, error)
 	Login(user model.User) (string, error)
 }
 
@@ -25,21 +25,17 @@ func NewUserUsecase(ur repository.IUserRepository) IUserUsecase {
 }
 
 func (uu *userUsecase) SignUp(user model.User) (model.UserResponse, error) {
-	if err := uu.uv.UserValidate(user); err != nil {
-		return model.UserResponse{}, err
-	}
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {
 		return model.UserResponse{}, err
 	}
-	newUser := model.User{Email: user.Email, Password: string(hash), UserName: user.UserName}
+	newUser := model.User{Email: user.Email, Password: string(hash)}
 	if err := uu.ur.CreateUser(&newUser); err != nil {
 		return model.UserResponse{}, err
 	}
 	resUser := model.UserResponse{
-		ID:       newUser.ID,
-		Email:    newUser.Email,
-		UserName: newUser.UserName,
+		ID:    newUser.ID,
+		Email: newUser.Email,
 	}
 	return resUser, nil
 }
