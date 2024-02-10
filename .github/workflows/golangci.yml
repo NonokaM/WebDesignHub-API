@@ -1,4 +1,4 @@
-name: go-ci
+name: golang-ci
 
 on:
   pull_request:
@@ -37,7 +37,7 @@ jobs:
         uses: reviewdog/action-golangci-lint@v2
         with:
           golangci_lint_version: v1.55.0
-          golangci_lint_flags: '-c .golangci.yaml ./...'
+          golangci_lint_flags: '-c .golangci.yml ./...'
           reporter: github-pr-review
           fail_on_error: true
 
